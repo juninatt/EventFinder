@@ -5,6 +5,9 @@ import org.bson.codecs.pojo.annotations.BsonId;
 
 import java.util.Objects;
 
+/**
+ * Represents an event with associated details.
+ */
 @Introspected
 public class Event {
 
