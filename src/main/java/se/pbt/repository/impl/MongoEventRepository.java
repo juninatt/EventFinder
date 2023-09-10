@@ -12,7 +12,7 @@ import se.pbt.repository.EventRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+import se.pbt.helper.EventDocumentConverter;
 @Singleton
 public class MongoEventRepository implements EventRepository {
 
@@ -26,13 +26,9 @@ public class MongoEventRepository implements EventRepository {
 
     @Override
     public Event save(Event event) {
-        Document document = new Document();
-        document.put("name", event.getName());
-        document.put("description", event.getDescription());
-
+        Document document = EventDocumentConverter.toDocument(event);
         collection.insertOne(document);
-
-        event.setId(document.getObjectId("_id").toString()); // Set the generated ID to the event
+        event.setId(document.getObjectId("_id").toString());
         return event;
     }
 
@@ -40,11 +36,7 @@ public class MongoEventRepository implements EventRepository {
     public List<Event> findAll() {
         List<Event> events = new ArrayList<>();
         for (Document document : collection.find()) {
-            Event event = new Event();
-            event.setId(document.getObjectId("_id").toString());
-            event.setName(document.getString("name"));
-            event.setDescription(document.getString("description"));
-            events.add(event);
+            events.add(EventDocumentConverter.fromDocument(document));
         }
         return events;
     }
@@ -52,11 +44,10 @@ public class MongoEventRepository implements EventRepository {
     @Override
     public Optional<Event> findById(String id) {
         Document document = collection.find(new Document("_id", new ObjectId(id))).first();
-            Event event = new Event();
-            event.setId(document.getObjectId("_id").toString());
-            event.setName(document.getString("name"));
-            event.setDescription(document.getString("description"));
-            return Optional.of(event);
+        if (document != null) {
+            return Optional.of(EventDocumentConverter.fromDocument(document));
+        }
+        return Optional.empty();
     }
 
     @Override
