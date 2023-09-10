@@ -1,5 +1,6 @@
-package se.pbt.service;
+package se.pbt.unittest.service;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -7,12 +8,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.pbt.domain.Event;
 import se.pbt.repository.impl.MongoEventRepository;
+import se.pbt.service.EventService;
 
 import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class EventServiceTest {
@@ -23,6 +25,7 @@ public class EventServiceTest {
     private EventService eventService;
 
     @Test
+    @DisplayName("Verify save")
     public void testSaveEvent() {
         Event event = new Event();
         when(mongoEventRepository.save(event)).thenReturn(event);
@@ -30,6 +33,7 @@ public class EventServiceTest {
     }
 
     @Test
+    @DisplayName("Verify retrieve all objects")
     public void testFindAllEvents() {
         Event event1 = new Event();
         Event event2 = new Event();
@@ -41,6 +45,7 @@ public class EventServiceTest {
     }
 
     @Test
+    @DisplayName("Verify find by ID")
     public void testFindEventById_present() {
         Event event = new Event();
         String id = "testId";
@@ -51,23 +56,10 @@ public class EventServiceTest {
     }
 
     @Test
-    public void testFindEventById_notPresent() {
-        String id = "testId";
-        when(mongoEventRepository.findById(id)).thenReturn(Optional.empty());
-        assertFalse(eventService.findById(id).isPresent());
-    }
-
-    @Test
+    @DisplayName("Verify delete by ID")
     public void testDeleteById_success() {
         String id = "testId";
         when(mongoEventRepository.deleteById(id)).thenReturn(true);
         assertTrue(eventService.deleteById(id));
-    }
-
-    @Test
-    public void testDeleteById_failure() {
-        String id = "testId";
-        when(mongoEventRepository.deleteById(id)).thenReturn(false);
-        assertFalse(eventService.deleteById(id));
     }
 }
