@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: se.pbt
+testFramework: junit
+sourceLanguage: java
+buildTool: maven
+features: [app-name, graalvm, http-client-test, java, java-application, junit, logback, maven, maven-enforcer-plugin, micronaut-aot, mongo-sync, netty-server, readme, serialization-bson, serialization-jackson, shade, test-resources, yaml, yaml-build]
