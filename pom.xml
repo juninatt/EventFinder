@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <groupId>se.pbt</groupId>
   <artifactId>EventFinder</artifactId>
   <version>0.1</version>
@@ -12,6 +13,8 @@
     <artifactId>micronaut-parent</artifactId>
     <version>4.1.0</version>
   </parent>
+
+  <!-- Properties -->
   <properties>
     <packaging>jar</packaging>
     <jdk.version>17</jdk.version>
@@ -24,6 +27,7 @@
     <exec.mainClass>se.pbt.EventFinderApp</exec.mainClass>
   </properties>
 
+  <!-- Repositories -->
   <repositories>
     <repository>
       <id>central</id>
@@ -31,42 +35,24 @@
     </repository>
   </repositories>
 
+  <!-- Dependencies -->
   <dependencies>
-
-    <dependency>
-      <groupId>io.micronaut.test</groupId>
-      <artifactId>micronaut-test-junit5</artifactId>
-      <scope>test</scope>
-      <version>4.0.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-junit-jupiter</artifactId>
-      <version>5.5.0</version>
-      <scope>test</scope>
-    </dependency>
-
-
-
+    <!-- Main Dependencies -->
     <dependency>
       <groupId>io.micronaut</groupId>
       <artifactId>micronaut-http-server-netty</artifactId>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>io.micronaut.mongodb</groupId>
       <artifactId>micronaut-mongo-sync</artifactId>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>io.micronaut.serde</groupId>
       <artifactId>micronaut-serde-bson</artifactId>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>io.micronaut.serde</groupId>
       <artifactId>micronaut-serde-jackson</artifactId>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
@@ -78,19 +64,22 @@
       <artifactId>snakeyaml</artifactId>
       <scope>runtime</scope>
     </dependency>
+
+    <!-- Test Dependencies -->
     <dependency>
-      <groupId>io.micronaut.testresources</groupId>
-      <artifactId>micronaut-test-resources-client</artifactId>
-      <scope>provided</scope>
+      <groupId>io.micronaut.test</groupId>
+      <artifactId>micronaut-test-junit5</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <scope>test</scope>
+      <version>5.5.0</version>
     </dependency>
     <dependency>
       <groupId>io.micronaut</groupId>
       <artifactId>micronaut-http-client</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.micronaut.test</groupId>
-      <artifactId>micronaut-test-junit5</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -103,27 +92,43 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.micronaut.testresources</groupId>
+      <artifactId>micronaut-test-resources-client</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.micronaut</groupId>
+      <artifactId>micronaut-inject-java</artifactId>
+      <scope>annotationProcessor</scope>
+    </dependency>
+
   </dependencies>
+
+  <!-- Build Configuration -->
   <build>
     <plugins>
+      <!-- Micronaut Maven Plugin -->
       <plugin>
         <groupId>io.micronaut.maven</groupId>
         <artifactId>micronaut-maven-plugin</artifactId>
-          <configuration>
-            <configFile>aot-${packaging}.properties</configFile>
-          </configuration>
+        <configuration>
+          <configFile>aot-${packaging}.properties</configFile>
+        </configuration>
       </plugin>
+
+      <!-- Maven Enforcer Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
       </plugin>
+
+      <!-- Maven Compiler Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <!-- Uncomment to enable incremental compilation -->
-          <!-- <useIncrementalCompilation>false</useIncrementalCompilation> -->
-
           <annotationProcessorPaths combine.children="append">
             <path>
               <groupId>io.micronaut.serde</groupId>
@@ -145,5 +150,4 @@
       </plugin>
     </plugins>
   </build>
-
 </project>
