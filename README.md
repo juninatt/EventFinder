@@ -1,41 +1,54 @@
-## Micronaut 4.1.0 Documentation
+# EventFinder
 
-- [User Guide](https://docs.micronaut.io/4.1.0/guide/index.html)
-- [API Reference](https://docs.micronaut.io/4.1.0/api/index.html)
-- [Configuration Reference](https://docs.micronaut.io/4.1.0/guide/configurationreference.html)
-- [Micronaut Guides](https://guides.micronaut.io/index.html)
----
+## Description
 
-- [Micronaut Maven Plugin documentation](https://micronaut-projects.github.io/micronaut-maven-plugin/latest/)
-## Feature maven-enforcer-plugin documentation
-
-- [https://maven.apache.org/enforcer/maven-enforcer-plugin/](https://maven.apache.org/enforcer/maven-enforcer-plugin/)
+`EventFinder` is a Micronaut-based microservice designed to manage and retrieve different kinds of cultural events. It leverages MongoDB as its primary data store and is organized and built using Maven.
 
 
-## Feature serialization-bson documentation
+### Prerequisites
 
-- [Micronaut Serialization BSON documentation](https://micronaut-projects.github.io/micronaut-serialization/latest/guide/)
+Before you begin, ensure you have met the following requirements:
+1. You have installed [Java 17](https://adoptium.net/?variant=openjdk17&jvmVariant=hotspot).
+2. You have installed [Maven](https://maven.apache.org/).
+3. You have a working MongoDB setup. Learn how to set it up [here](https://www.mongodb.com/try/download/community).
 
+### Installation
 
-## Feature micronaut-aot documentation
+Clone the `EventFinder` repository to your local machine to get started with the project.
 
-- [Micronaut AOT documentation](https://micronaut-projects.github.io/micronaut-aot/latest/guide/)
+## Configuration
 
+The application utilizes Micronaut's `application.yml` for configuration. Ensure to set up the MongoDB URI and database name correctly before running the application.
 
-## Feature test-resources documentation
+```yaml
+micronaut:
+  application:
+    name: eventFinder
 
-- [Micronaut Test Resources documentation](https://micronaut-projects.github.io/micronaut-test-resources/latest/guide/)
+mongodb:
+  uri: mongodb://localhost:27017/eventsdb
+    ...
+```
 
+## Usage
 
-## Feature mongo-sync documentation
+To run `EventFinder`, follow these steps:
 
-- [Micronaut MongoDB Synchronous Driver documentation](https://micronaut-projects.github.io/micronaut-mongodb/latest/guide/index.html)
+1. Navigate to the root directory of the project.
+2. Use the command `mvn clean install` to build the project.
+3. Run the application with `java -jar target/eventfinder-1.0.jar`.
 
-- [https://docs.mongodb.com](https://docs.mongodb.com)
+## Documentation
 
+`EventFinder` is thoroughly documented using JavaDoc. Key classes include:
+- `MongoConfig`: Handles MongoDB configuration properties.
+- `MongoEventRepository`: Implements CRUD operations for events.
 
-## Feature serialization-jackson documentation
+For detailed documentation, refer to the JavaDoc comments in the respective source files.
 
-- [Micronaut Serialization Jackson Core documentation](https://micronaut-projects.github.io/micronaut-serialization/latest/guide/)
+## Author
+
+Petter Bergström / [juninatt](https://github.com/juninatt) on GitHub
+
 
 
