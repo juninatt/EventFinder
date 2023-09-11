@@ -41,4 +41,6 @@ public interface EventRepository {
      * @return {@code true} if the event was deleted successfully, {@code false} otherwise.
      */
     boolean deleteById(String id);
+
+    void clearAll();
 }

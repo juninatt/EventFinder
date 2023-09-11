@@ -94,4 +94,9 @@ public class MongoEventRepository implements EventRepository {
             return false;
         }
     }
+
+    @Override
+    public void clearAll() {
+        collection.drop();
+    }
 }

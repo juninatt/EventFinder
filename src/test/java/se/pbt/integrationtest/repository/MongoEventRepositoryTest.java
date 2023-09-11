@@ -2,6 +2,7 @@ package se.pbt.integrationtest.repository;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import jakarta.inject.Inject;
 import org.junit.jupiter.api.*;
 import se.pbt.domain.Event;
 import se.pbt.repository.impl.MongoEventRepository;
@@ -11,10 +12,11 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)  // This allows for optimizations across all tests
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MongoEventRepositoryTest {
 
     private MongoClient mongoClient;
+    @Inject
     private MongoEventRepository repository;
 
     @BeforeAll
