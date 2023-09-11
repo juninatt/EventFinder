@@ -6,6 +6,7 @@ import com.mongodb.client.MongoDatabase;
 import jakarta.inject.Singleton;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import se.pbt.config.MongoConfig;
 import se.pbt.domain.Event;
 import se.pbt.repository.EventRepository;
 
@@ -27,13 +28,12 @@ public class MongoEventRepository implements EventRepository {
     /**
      * Constructor initializing the MongoDB collection to be used for operations.
      *
-     * @param mongoClient    The MongoDB client instance.
-     * @param databaseName   The name of the MongoDB database.
-     * @param collectionName The name of the MongoDB collection.
+     * @param mongoClient  The MongoDB client instance.
+     * @param config       The configuration object containing MongoDB settings.
      */
-    public MongoEventRepository(MongoClient mongoClient, String databaseName, String collectionName) {
-        MongoDatabase database = mongoClient.getDatabase(databaseName);
-        this.collection = database.getCollection(collectionName);
+    public MongoEventRepository(MongoClient mongoClient, MongoConfig config) {
+        MongoDatabase database = mongoClient.getDatabase(config.getDatabase());
+        this.collection = database.getCollection(config.getCollection());
     }
 
     /**

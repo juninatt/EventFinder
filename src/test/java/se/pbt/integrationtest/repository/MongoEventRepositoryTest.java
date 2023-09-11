@@ -2,8 +2,11 @@ package se.pbt.integrationtest.repository;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import se.pbt.config.MongoConfig;
 import se.pbt.domain.Event;
 import se.pbt.repository.impl.MongoEventRepository;
 
@@ -12,17 +15,15 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@MicronautTest
 public class MongoEventRepositoryTest {
 
-    private MongoClient mongoClient;
-    @Inject
-    private MongoEventRepository repository;
+    private final MongoEventRepository repository;
 
-    @BeforeAll
-    public void setupDatabase() {
-        mongoClient = MongoClients.create();
-        repository = new MongoEventRepository(mongoClient, "integrationTestDatabase", "eventCollection");
+    @Inject
+    public MongoEventRepositoryTest(MongoConfig config) {
+        MongoClient mongoClient = MongoClients.create(config.getUri());
+        repository = new MongoEventRepository(mongoClient, config);
     }
 
     private Event createSampleEvent(String nameSuffix, String descriptionSuffix) {
@@ -67,11 +68,6 @@ public class MongoEventRepositoryTest {
 
         boolean isDeleted = repository.deleteById(savedEvent.getId());
         assertTrue(isDeleted);
-    }
-
-    @AfterAll
-    public void cleanupDatabase() {
-        mongoClient.close();
     }
 }
 

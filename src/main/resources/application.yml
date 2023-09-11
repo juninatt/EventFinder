@@ -4,3 +4,5 @@ micronaut:
 
 mongodb:
   uri: mongodb://localhost:27017/eventsdb
+  database: eventsdb
+  collection: events

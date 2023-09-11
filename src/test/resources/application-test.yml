@@ -1,2 +1,5 @@
-mongodb:
-  uri: mongodb://localhost:27017/eventsdb_test
+  mongodb:
+    uri: mongodb://localhost:27017/
+    database: integrationTestDatabase
+    collection: eventCollection
+

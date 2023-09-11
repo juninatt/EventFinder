@@ -7,6 +7,7 @@ import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import se.pbt.config.MongoConfig;
 import se.pbt.domain.Event;
 import se.pbt.repository.impl.MongoEventRepository;
 import se.pbt.service.EventService;
@@ -17,15 +18,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @MicronautTest
 public class EventServiceTest {
-    MongoClient mongoClient;
     private final MongoEventRepository repository;
-
     private final EventService eventService;
 
     @Inject
-    public EventServiceTest() {
-        mongoClient = MongoClients.create();
-        repository = new MongoEventRepository(mongoClient, "integrationTestDatabase", "eventCollection");
+    public EventServiceTest(MongoConfig config) {
+        MongoClient mongoClient = MongoClients.create(config.getUri());
+        repository = new MongoEventRepository(mongoClient, config);
         eventService = new EventService(repository);
     }
 
