@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import se.pbt.config.MongoConfig;
 import se.pbt.domain.Event;
 import se.pbt.repository.impl.MongoEventRepository;
+import se.pbt.testobject.TestObjectCreator;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,17 +27,10 @@ public class MongoEventRepositoryTest {
         repository = new MongoEventRepository(mongoClient, config);
     }
 
-    private Event createSampleEvent(String nameSuffix, String descriptionSuffix) {
-        Event event = new Event();
-        event.setName("Integration Test Event " + nameSuffix);
-        event.setDescription("Integration Test Description " + descriptionSuffix);
-        return event;
-    }
-
     @Test
     @DisplayName("Verify save and retrieve all events")
     public void testSaveAndFindAll() {
-        Event event = createSampleEvent("", "");
+        Event event = TestObjectCreator.createSampleEvent("", "");
 
         Event savedEvent = repository.save(event);
         assertNotNull(savedEvent.getId());
@@ -48,7 +42,7 @@ public class MongoEventRepositoryTest {
     @Test
     @DisplayName("Verify save and retrieve event by ID")
     public void testFindById() {
-        Event event = createSampleEvent("for FindById", "for FindById");
+        Event event = TestObjectCreator.createSampleEvent("for FindById", "for FindById");
 
         Event savedEvent = repository.save(event);
         assertNotNull(savedEvent.getId());
@@ -61,7 +55,7 @@ public class MongoEventRepositoryTest {
     @Test
     @DisplayName("Verify save and delete event by ID")
     public void testDeleteById() {
-        Event event = createSampleEvent("for Delete", "for Delete");
+        Event event = TestObjectCreator.createSampleEvent("for Delete", "for Delete");
 
         Event savedEvent = repository.save(event);
         assertNotNull(savedEvent.getId());

@@ -11,6 +11,7 @@ import se.pbt.config.MongoConfig;
 import se.pbt.domain.Event;
 import se.pbt.repository.impl.MongoEventRepository;
 import se.pbt.service.EventService;
+import se.pbt.testobject.TestObjectCreator;
 
 import java.util.Optional;
 
@@ -36,7 +37,7 @@ public class EventServiceTest {
     @Test
     @DisplayName("Verify save event")
     void testSaveEvent() {
-        Event event = new Event("Sample Event", "This is a sample event description");
+        Event event = TestObjectCreator.createSampleEvent("Jul på Liseberg", "Jolly");
         Event savedEvent = eventService.save(event);
 
         assertNotNull(savedEvent.getId());
@@ -47,8 +48,8 @@ public class EventServiceTest {
     @Test
     @DisplayName("Verify retrieve all events")
     void testFindAllEvents() {
-        eventService.save(new Event("Event 1", "Description 1"));
-        eventService.save(new Event("Event 2", "Description 2"));
+        eventService.save(TestObjectCreator.createSampleEvent("Way out West", "Rainy festival"));
+        eventService.save(TestObjectCreator.createSampleEvent("Book Reading", "Cozy"));
 
         assertEquals(2, eventService.findAll().size());
     }
@@ -56,7 +57,7 @@ public class EventServiceTest {
     @Test
     @DisplayName("Verify retrieve event by ID")
     void testFindEventById() {
-        Event event = new Event("Event", "Description");
+        Event event = TestObjectCreator.createSampleEvent("Kulturkalaset", "Gratis");
         Event savedEvent = eventService.save(event);
 
         Optional<Event> foundEvent = eventService.findById(savedEvent.getId());
@@ -69,7 +70,7 @@ public class EventServiceTest {
     @Test
     @DisplayName("Verify delete event by ID")
     void testDeleteEventById() {
-        Event event = new Event("Event", "Description");
+        Event event = TestObjectCreator.createSampleEvent("Göteborg 400 år", "Once in a lifetime");
         Event savedEvent = eventService.save(event);
 
         assertTrue(eventService.deleteById(savedEvent.getId()));
