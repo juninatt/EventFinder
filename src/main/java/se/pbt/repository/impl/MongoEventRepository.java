@@ -8,12 +8,16 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import se.pbt.config.MongoConfig;
 import se.pbt.domain.Event;
+import se.pbt.exception.DatabaseConnectionException;
+import se.pbt.exception.EventDeletionException;
+import se.pbt.exception.EventNotFoundException;
+import se.pbt.exception.EventSavingException;
+import se.pbt.helper.EventDocumentConverter;
 import se.pbt.repository.EventRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import se.pbt.helper.EventDocumentConverter;
 
 /**
  * Implementation of the {@link EventRepository} interface using MongoDB as the underlying datastore.
@@ -32,8 +36,12 @@ public class MongoEventRepository implements EventRepository {
      * @param config       The configuration object containing MongoDB settings.
      */
     public MongoEventRepository(MongoClient mongoClient, MongoConfig config) {
+        try {
         MongoDatabase database = mongoClient.getDatabase(config.getDatabase());
         this.collection = database.getCollection(config.getCollection());
+        } catch (Exception exception) {
+            throw new DatabaseConnectionException("Failed to connect to the database", exception.getCause());
+        }
     }
 
     /**
@@ -45,8 +53,12 @@ public class MongoEventRepository implements EventRepository {
     @Override
     public Event save(Event event) {
         Document document = EventDocumentConverter.toDocument(event);
-        collection.insertOne(document);
-        event.setId(document.getObjectId("_id").toString());
+        try {
+            collection.insertOne(document);
+            event.setId(document.getObjectId("_id").toString());
+        } catch (Exception exception) {
+            throw new EventSavingException(event.getId());
+        }
         return event;
     }
 
@@ -61,6 +73,8 @@ public class MongoEventRepository implements EventRepository {
         for (Document document : collection.find()) {
             events.add(EventDocumentConverter.fromDocument(document));
         }
+        if (events.size() == 0)
+            throw new EventNotFoundException("Any");
         return events;
     }
 
@@ -73,10 +87,10 @@ public class MongoEventRepository implements EventRepository {
     @Override
     public Optional<Event> findById(String id) {
         Document document = collection.find(new Document("_id", new ObjectId(id))).first();
-        if (document != null) {
-            return Optional.of(EventDocumentConverter.fromDocument(document));
+        if (document == null) {
+            throw new EventNotFoundException(id);
         }
-        return Optional.empty();
+        return Optional.of(EventDocumentConverter.fromDocument(document));
     }
 
     /**
@@ -91,7 +105,7 @@ public class MongoEventRepository implements EventRepository {
             collection.deleteOne(new Document("_id", new ObjectId(id)));
             return true;
         } catch (RuntimeException exception) {
-            return false;
+            throw new EventDeletionException("Failed to delete event with ID: " + id, exception.getCause());
         }
     }
 

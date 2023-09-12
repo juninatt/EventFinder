@@ -2,6 +2,7 @@ package se.pbt.config;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import jakarta.validation.constraints.NotBlank;
+import se.pbt.exception.ConfigurationValidationException;
 
 /**
  * Configuration properties for MongoDB connection and interactions.
@@ -18,12 +19,16 @@ public class MongoConfig {
     private String collection;
 
 
-    // Getters and setters
+    // Getters and setters needed for Micronaut to initialize database
+
     public String getUri() {
         return uri;
     }
 
     public void setUri(String uri) {
+        if(uri == null || uri.trim().isEmpty()) {
+            throw new ConfigurationValidationException("URI cannot be blank");
+        }
         this.uri = uri;
     }
 
@@ -32,6 +37,9 @@ public class MongoConfig {
     }
 
     public void setDatabase(String database) {
+        if(database == null || database.trim().isEmpty()) {
+            throw new ConfigurationValidationException("Database cannot be blank");
+        }
         this.database = database;
     }
 
@@ -40,6 +48,9 @@ public class MongoConfig {
     }
 
     public void setCollection(String collection) {
+        if(collection == null || collection.trim().isEmpty()) {
+            throw new ConfigurationValidationException("Collection cannot be blank");
+        }
         this.collection = collection;
     }
 }

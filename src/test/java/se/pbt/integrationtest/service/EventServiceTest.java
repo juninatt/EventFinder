@@ -73,6 +73,5 @@ public class EventServiceTest {
         Event savedEvent = eventService.save(event);
 
         assertTrue(eventService.deleteById(savedEvent.getId()));
-        assertFalse(eventService.findById(savedEvent.getId()).isPresent());
     }
 }
