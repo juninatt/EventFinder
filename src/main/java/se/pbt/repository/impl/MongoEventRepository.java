@@ -12,7 +12,7 @@ import se.pbt.exception.DatabaseConnectionException;
 import se.pbt.exception.EventDeletionException;
 import se.pbt.exception.EventNotFoundException;
 import se.pbt.exception.EventSavingException;
-import se.pbt.helper.EventDocumentConverter;
+import se.pbt.converter.EventDocumentConverter;
 import se.pbt.repository.EventRepository;
 
 import java.util.ArrayList;

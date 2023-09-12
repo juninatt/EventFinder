@@ -3,7 +3,9 @@ package se.pbt.controller;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 import jakarta.inject.Inject;
+import se.pbt.converter.EventDTOConverter;
 import se.pbt.domain.Event;
+import se.pbt.dto.EventDTO;
 import se.pbt.service.EventService;
 
 import java.util.List;
@@ -36,8 +38,8 @@ public class EventController {
      * @return The added {@link Event} object.
      */
     @Post
-    public Event addEvent(Event event) {
-        return eventService.save(event);
+    public Event addEvent(EventDTO event) {
+        return eventService.save(EventDTOConverter.fromDTO(event));
     }
 
     /**

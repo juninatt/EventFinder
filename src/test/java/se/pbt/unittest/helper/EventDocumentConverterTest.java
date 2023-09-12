@@ -5,7 +5,7 @@ import org.bson.types.ObjectId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import se.pbt.domain.Event;
-import se.pbt.helper.EventDocumentConverter;
+import se.pbt.converter.EventDocumentConverter;
 
 import java.time.Instant;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package se.pbt.helper;
+package se.pbt.converter;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
