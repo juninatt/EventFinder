@@ -1,8 +1,12 @@
 package se.pbt.exception;
 
+import io.micronaut.http.HttpStatus;
+import se.pbt.annotation.HttpStatusAnnotation;
+
 /**
  * Exception indicating database connection issues.
  */
+@HttpStatusAnnotation(HttpStatus.INTERNAL_SERVER_ERROR)
 public class DatabaseConnectionException extends RuntimeException {
 
 

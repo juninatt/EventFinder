@@ -1,8 +1,12 @@
 package se.pbt.exception;
 
+import io.micronaut.http.HttpStatus;
+import se.pbt.annotation.HttpStatusAnnotation;
+
 /**
  * Exception that indicates an error occurred while attempting to save an event.
  */
+@HttpStatusAnnotation(HttpStatus.INTERNAL_SERVER_ERROR)
 public class EventSavingException extends RuntimeException {
 
     /**

@@ -1,10 +1,13 @@
 package se.pbt.exception;
 
+import io.micronaut.http.HttpStatus;
+import se.pbt.annotation.HttpStatusAnnotation;
 import se.pbt.domain.Event;
 
 /**
  * Custom exception to indicate when an {@link Event} is not found.
  */
+@HttpStatusAnnotation(HttpStatus.NOT_FOUND)
 public class EventNotFoundException extends RuntimeException {
 
     /**

@@ -1,8 +1,12 @@
 package se.pbt.exception;
 
+import io.micronaut.http.HttpStatus;
+import se.pbt.annotation.HttpStatusAnnotation;
+
 /**
  * Custom exception to indicate configuration validation errors.
  */
+@HttpStatusAnnotation(HttpStatus.INTERNAL_SERVER_ERROR)
 public class ConfigurationValidationException extends RuntimeException {
 
     /**

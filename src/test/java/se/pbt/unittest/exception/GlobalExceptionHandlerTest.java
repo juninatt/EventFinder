@@ -7,9 +7,7 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import se.pbt.exception.DatabaseConnectionException;
-import se.pbt.exception.EventNotFoundException;
-import se.pbt.exception.EventSavingException;
+import se.pbt.exception.*;
 import se.pbt.exception.handler.GlobalExceptionHandler;
 import se.pbt.exception.response.ErrorResponse;
 
@@ -30,7 +28,7 @@ public class GlobalExceptionHandlerTest {
     @Test
     @DisplayName("Verify EventNotFound is handled")
     void handleEventNotFoundException() {
-        EventNotFoundException exception = new EventNotFoundException("13");
+        var exception = new EventNotFoundException("13");
 
         HttpResponse<ErrorResponse> response = handler.handle(mockRequest, exception);
 
@@ -43,7 +41,7 @@ public class GlobalExceptionHandlerTest {
     @Test
     @DisplayName("Verify DataBaseConnectionException is handled")
     void handleDatabaseConnectionException() {
-        DatabaseConnectionException exception = new DatabaseConnectionException("DB Connection error", null);
+        var exception = new DatabaseConnectionException("DB Connection error", null);
 
         HttpResponse<ErrorResponse> response = handler.handle(mockRequest, exception);
 
@@ -56,7 +54,7 @@ public class GlobalExceptionHandlerTest {
     @Test
     @DisplayName("Verify EventSavingException is handled")
     void handleEventSavingException() {
-        EventSavingException exception = new EventSavingException("Failed to save event");
+        var exception = new EventSavingException("Failed to save event");
 
         HttpResponse<ErrorResponse> response = handler.handle(mockRequest, exception);
 
@@ -64,13 +62,64 @@ public class GlobalExceptionHandlerTest {
         assertEquals("EventSavingException", response.getBody().get().getTitle());
         assertEquals("Failed to save event", response.getBody().get().getDetail());
         assertEquals(500, response.getBody().get().getHttpStatusCode());
-
     }
 
     @Test
-    @DisplayName("Verify DataBaseConnectionException is handled")
+    @DisplayName("Verify EventDeletionException is handled")
+    void handleEvenDeletionException() {
+        var exception = new EventDeletionException("13");
+
+        HttpResponse<ErrorResponse> response = handler.handle(mockRequest, exception);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatus());
+        assertEquals("EventDeletionException", response.getBody().get().getTitle());
+        assertEquals("Error deleting event with ID: 13", response.getBody().get().getDetail());
+        assertEquals(500, response.getBody().get().getHttpStatusCode());
+    }
+
+    @Test
+    @DisplayName("Verify EventValidationException is handled")
+    void handleEventValidationException() {
+        var exception = new EventValidationException("Could not validate event");
+
+        HttpResponse<ErrorResponse> response = handler.handle(mockRequest, exception);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatus());
+        assertEquals("EventValidationException", response.getBody().get().getTitle());
+        assertEquals("Could not validate event", response.getBody().get().getDetail());
+        assertEquals(400, response.getBody().get().getHttpStatusCode());
+    }
+
+    @Test
+    @DisplayName("Verify ConfigurationValidationException is handled")
+    void handleConfigurationValidationException() {
+        var exception = new ConfigurationValidationException("Configuration error");
+
+        HttpResponse<ErrorResponse> response = handler.handle(mockRequest, exception);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatus());
+        assertEquals("ConfigurationValidationException", response.getBody().get().getTitle());
+        assertEquals("Configuration error", response.getBody().get().getDetail());
+        assertEquals(500, response.getBody().get().getHttpStatusCode());
+    }
+
+    @Test
+    @DisplayName("Verify DatabaseConnectionException is handled")
+    void handleDatabaseConfigurationException() {
+        var exception = new DatabaseConnectionException("Error while configuring database");
+
+        HttpResponse<ErrorResponse> response = handler.handle(mockRequest, exception);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatus());
+        assertEquals("DatabaseConnectionException", response.getBody().get().getTitle());
+        assertEquals("Error while configuring database", response.getBody().get().getDetail());
+        assertEquals(500, response.getBody().get().getHttpStatusCode());
+    }
+
+    @Test
+    @DisplayName("Verify exception without custom annotation is handled")
     void handleGenericException() {
-        Exception exception = new Exception("Some generic error");
+        var exception = new Exception("Some generic error");
 
         HttpResponse<ErrorResponse> response = handler.handle(mockRequest, exception);
 
