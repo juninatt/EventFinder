@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.util.Map;
 
 public record EventDTO(
-        String id,
         String name,
         String venue,
         Instant date,
