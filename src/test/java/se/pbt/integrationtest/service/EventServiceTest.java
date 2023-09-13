@@ -35,7 +35,7 @@ public class EventServiceTest {
     }
 
     @Test
-    @DisplayName("Verify save event")
+    @DisplayName("Verify save event saves and returns correct object")
     void testSaveEvent() {
         Event event = TestObjectCreator.createSampleEvent("Jul på Liseberg", "Jolly");
         Event savedEvent = eventService.save(event);
@@ -46,7 +46,7 @@ public class EventServiceTest {
     }
 
     @Test
-    @DisplayName("Verify retrieve all events")
+    @DisplayName("Verify find all retrieves all events")
     void testFindAllEvents() {
         eventService.save(TestObjectCreator.createSampleEvent("Way out West", "Rainy festival"));
         eventService.save(TestObjectCreator.createSampleEvent("Book Reading", "Cozy"));
@@ -55,7 +55,7 @@ public class EventServiceTest {
     }
 
     @Test
-    @DisplayName("Verify retrieve event by ID")
+    @DisplayName("Verify find by ID retrieves correct event")
     void testFindEventById() {
         Event event = TestObjectCreator.createSampleEvent("Kulturkalaset", "Gratis");
         Event savedEvent = eventService.save(event);
@@ -68,7 +68,7 @@ public class EventServiceTest {
     }
 
     @Test
-    @DisplayName("Verify delete event by ID")
+    @DisplayName("Verify delete by ID deletes event")
     void testDeleteEventById() {
         Event event = TestObjectCreator.createSampleEvent("Göteborg 400 år", "Once in a lifetime");
         Event savedEvent = eventService.save(event);

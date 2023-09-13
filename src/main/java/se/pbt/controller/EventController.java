@@ -17,9 +17,12 @@ import java.util.Optional;
  */
 @Controller("/events")
 public class EventController {
+    private final EventService eventService;
 
     @Inject
-    private EventService eventService;
+    public EventController(EventService eventService) {
+        this.eventService = eventService;
+    }
 
     /**
      * Retrieves a list of all events.

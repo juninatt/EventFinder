@@ -1,8 +1,11 @@
 package se.pbt.dto;
 
+import io.micronaut.core.annotation.Introspected;
+
 import java.time.Instant;
 import java.util.Map;
 
+@Introspected
 public record EventDTO(
         String name,
         String venue,

@@ -1,4 +1,4 @@
-package se.pbt.unittest.helper;
+package se.pbt.unittest.converter;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -66,7 +66,7 @@ public class EventDocumentConverterTest {
         assertEquals("Sample Category", convertedEvent.getCategory());
         assertEquals(3600L, convertedEvent.getDuration());
         assertEquals("Sample Description", convertedEvent.getDescription());
-        assertEquals(100.50, convertedEvent.getTicketPrice(), 0.001); // small delta for floating point comparison
+        assertEquals(100.50, convertedEvent.getTicketPrice(), 0.001); // Small delta for floating point comparison
         assertEquals(links, convertedEvent.getLinks());
     }
 }

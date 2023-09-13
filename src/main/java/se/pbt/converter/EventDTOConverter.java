@@ -15,7 +15,6 @@ public class EventDTOConverter {
      */
     public static EventDTO toDTO(Event event) {
         return new EventDTO(
-                event.getId(),
                 event.getName(),
                 event.getVenue(),
                 event.getDate(),
@@ -35,7 +34,6 @@ public class EventDTOConverter {
      */
     public static Event fromDTO(EventDTO dto) {
         Event event = new Event();
-        event.setId(dto.id());
         event.setName(dto.name());
         event.setVenue(dto.venue());
         event.setDate(dto.date());
