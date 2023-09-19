@@ -1,10 +1,17 @@
 package se.pbt.dto;
 
 import io.micronaut.core.annotation.Introspected;
+import se.pbt.domain.Event;
 
 import java.time.Instant;
-import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 
+/**
+ * Data Transfer Object (DTO) representation of an {@link Event}.
+ * <p>
+ * The {@code @Introspected} annotation marks this class for compile-time bean introspection.
+ * </p>
+ */
 @Introspected
 public record EventDTO(
         String name,
@@ -14,6 +21,6 @@ public record EventDTO(
         Long duration,
         String description,
         Double ticketPrice,
-        Map<String, String> links
+        ConcurrentMap<String, String> links
 ) {}
 

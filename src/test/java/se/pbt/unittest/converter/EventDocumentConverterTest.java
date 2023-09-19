@@ -4,11 +4,12 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import se.pbt.domain.Event;
 import se.pbt.converter.EventDocumentConverter;
+import se.pbt.domain.Event;
+import se.pbt.testobject.TestObjectCreator;
 
 import java.time.Instant;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,29 +18,19 @@ public class EventDocumentConverterTest {
     @Test
     @DisplayName("Verify conversion from event to document")
     public void testToDocument() {
-        Event event = new Event("Concert", "A big rock concert");
-        event.setId("60a4b56f5b4b3f104c39e128");
-        event.setVenue("Arena");
-        event.setDate(Instant.parse("2021-05-12T10:15:30Z"));
-        event.setCategory("Music");
-        event.setDuration(3L);
-        event.setDescription("A big rock concert in the Arena");
-        event.setTicketPrice(49.99);
-        HashMap<String, String> links = new HashMap<>();
-        links.put("Official Site", "http://example.com");
-        event.setLinks(links);
+        // Create test object
+        Event testEvent = TestObjectCreator.createSampleEvent("Concert", "A big rock concert in the Arena");
 
-        Document doc = EventDocumentConverter.toDocument(event);
+        Document doc = EventDocumentConverter.toDocument(testEvent);
 
-        assertEquals("60a4b56f5b4b3f104c39e128", doc.getObjectId("_id").toString());
-        assertEquals("Concert", doc.getString("name"));
-        assertEquals("Arena", doc.getString("venue"));
-        assertEquals("2021-05-12T10:15:30Z", doc.getString("date"));
-        assertEquals("Music", doc.getString("category"));
-        assertEquals(3L, doc.getLong("duration"));
-        assertEquals("A big rock concert in the Arena", doc.getString("description"));
-        assertEquals(49.99, doc.getDouble("ticketPrice"), 0.01);
-        assertEquals(links, doc.get("links"));
+        assertEquals(testEvent.getName(), doc.getString("name"));
+        assertEquals(testEvent.getVenue(), doc.getString("venue"));
+        assertEquals(testEvent.getDate().toString(), doc.getString("date"));
+        assertEquals(testEvent.getCategory(), doc.getString("category"));
+        assertEquals(testEvent.getDuration(), doc.getLong("duration"));
+        assertEquals(testEvent.getDescription(), doc.getString("description"));
+        assertEquals(testEvent.getTicketPrice(), doc.getDouble("ticketPrice"), 0.01);
+        assertEquals(testEvent.getLinks(), doc.get("links"));
     }
 
     @Test
@@ -54,7 +45,7 @@ public class EventDocumentConverterTest {
         doc.put("duration", 3600L);
         doc.put("description", "Sample Description");
         doc.put("ticketPrice", 100.50);
-        HashMap<String, String> links = new HashMap<>();
+        ConcurrentHashMap<String, String> links = new ConcurrentHashMap<>();
         links.put("Sample Link", "http://example.com");
         doc.put("links", links);
 

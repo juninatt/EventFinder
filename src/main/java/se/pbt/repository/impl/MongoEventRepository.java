@@ -55,11 +55,10 @@ public class MongoEventRepository implements EventRepository {
         Document document = EventDocumentConverter.toDocument(event);
         try {
             collection.insertOne(document);
-            event.setId(document.getObjectId("_id").toString());
+             return new Event(event, document.getObjectId("_id").toString());
         } catch (Exception exception) {
-            throw new EventSavingException(event.getId());
+            throw new EventSavingException("Problem saving event. Save aborted");
         }
-        return event;
     }
 
     /**

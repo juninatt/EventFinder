@@ -4,8 +4,8 @@ import se.pbt.domain.Event;
 import se.pbt.dto.EventDTO;
 
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * This class provides utility methods to create test objects for various classes
@@ -22,20 +22,17 @@ public class TestObjectCreator {
      * @return A populated Event object.
      */
     public static Event createSampleEvent(String name, String description) {
-        Event event = new Event();
-        event.setName("Integration Test Event " + name);
-        event.setDescription("Integration Test Description " + description);
-
-        event.setVenue("Sample Venue " + name);
-        event.setDate(Instant.now());
-        event.setCategory("Sample Category");
-        event.setDuration(120L);
-        event.setTicketPrice(50.0);
-        HashMap<String, String> links = new HashMap<>();
+        String fullName = "Integration Test Event " + name;
+        String fullDescription = "Integration Test Description " + description;
+        String venue = "Sample Venue " + name;
+        Instant date = Instant.now();
+        String category = "Sample Category";
+        long duration = 120L;
+        double ticketPrice = 50.0;
+        ConcurrentHashMap<String, String> links = new ConcurrentHashMap<>();
         links.put("SampleLink", "http://example.com");
-        event.setLinks(links);
 
-        return event;
+        return new Event(fullName, venue, date, category, duration, fullDescription, ticketPrice, links);
     }
 
     /**
@@ -46,15 +43,53 @@ public class TestObjectCreator {
      * @return A populated EventDTO object.
      */
     public static EventDTO createSampleEventDTO(String name, String description) {
+        String eventName = "Integration Test Event " + name;
+        String eventDescription = "Integration Test Description " + description;
+        Instant currentDate = Instant.now();
+        String eventVenue = "Integration Test Venue " + name;
+        long eventDuration = 120L;
+        String eventCategory = "Integration Test Category " + name;
+        double eventPrice = 99.99;
+        ConcurrentMap<String, String> eventLinks = new ConcurrentHashMap<>();
+        eventLinks.put("facebook", "facebook.com/event" + name);
+
         return new EventDTO(
-                "Integration Test Event " + name,
-                "Integration Test Description " + description,
-                Instant.now(),
-                "Integration Test Venue " + name,
-                120L,
-                "Integration Test Category " + name,
-                99.99,
-                Map.of("facebook", "facebook.com/event" + name)
+                eventName,
+                eventDescription,
+                currentDate,
+                eventVenue,
+                eventDuration,
+                eventCategory,
+                eventPrice,
+                eventLinks
+        );
+    }
+
+    /**
+     * Creates a sample {@link Event} object with pre-defined test values for testing purposes.
+     *
+     * @return A populated {@link Event} object with test values.
+     */
+    public static Event createSampleEvent() {
+        String fullName = "Integration Test Event";
+        String fullDescription = "Integration Test Description";
+        String venue = "Sample Venue ";
+        Instant date = Instant.now();
+        String category = "Sample Category";
+        long duration = 120L;
+        double ticketPrice = 50.0;
+        ConcurrentHashMap<String, String> links = new ConcurrentHashMap<>();
+        links.put("SampleLink", "http://example.com");
+
+        return new Event(
+                fullName,
+                venue,
+                date,
+                category,
+                duration,
+                fullDescription,
+                ticketPrice,
+                links
         );
     }
 }

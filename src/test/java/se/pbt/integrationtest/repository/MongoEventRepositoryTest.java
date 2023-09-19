@@ -47,6 +47,7 @@ public class MongoEventRepositoryTest {
         Event savedEvent = repository.save(event);
         assertNotNull(savedEvent.getId());
 
+        System.out.println(savedEvent.getId());
         Optional<Event> foundEvent = repository.findById(savedEvent.getId());
         assertTrue(foundEvent.isPresent());
         assertEquals(savedEvent.getName(), foundEvent.get().getName());
@@ -60,6 +61,7 @@ public class MongoEventRepositoryTest {
         Event savedEvent = repository.save(event);
         assertNotNull(savedEvent.getId());
 
+        System.out.println(savedEvent.getId());
         boolean isDeleted = repository.deleteById(savedEvent.getId());
         assertTrue(isDeleted);
     }

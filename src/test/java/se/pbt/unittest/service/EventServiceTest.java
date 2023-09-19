@@ -9,11 +9,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import se.pbt.domain.Event;
 import se.pbt.repository.impl.MongoEventRepository;
 import se.pbt.service.EventService;
+import se.pbt.testobject.TestObjectCreator;
 
 import java.util.Arrays;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,7 +29,7 @@ public class EventServiceTest {
     @Test
     @DisplayName("Verify save")
     public void testSaveEvent() {
-        Event event = new Event();
+        Event event = TestObjectCreator.createSampleEvent();
         when(mongoEventRepository.save(event)).thenReturn(event);
         assertEquals(event, eventService.save(event));
     }
@@ -35,8 +37,8 @@ public class EventServiceTest {
     @Test
     @DisplayName("Verify retrieve all objects")
     public void testFindAllEvents() {
-        Event event1 = new Event();
-        Event event2 = new Event();
+        Event event1 = TestObjectCreator.createSampleEvent();
+        Event event2 = TestObjectCreator.createSampleEvent();
 
         when(mongoEventRepository.findAll()).thenReturn(Arrays.asList(event1, event2));
         assertEquals(2, eventService.findAll().size());
@@ -47,7 +49,7 @@ public class EventServiceTest {
     @Test
     @DisplayName("Verify find by ID")
     public void testFindEventById_present() {
-        Event event = new Event();
+        Event event = TestObjectCreator.createSampleEvent();
         String id = "testId";
 
         when(mongoEventRepository.findById(id)).thenReturn(Optional.of(event));
