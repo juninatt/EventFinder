@@ -4,7 +4,7 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import se.pbt.converter.EventDocumentConverter;
+import se.pbt.converter.EventConverter;
 import se.pbt.domain.Event;
 import se.pbt.testobject.TestObjectCreator;
 
@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class EventDocumentConverterTest {
+public class EventConverterTest {
 
     @Test
     @DisplayName("Verify conversion from event to document")
@@ -21,7 +21,7 @@ public class EventDocumentConverterTest {
         // Create test object
         Event testEvent = TestObjectCreator.createSampleEvent("Concert", "A big rock concert in the Arena");
 
-        Document doc = EventDocumentConverter.toDocument(testEvent);
+        Document doc = EventConverter.toDocument(testEvent);
 
         assertEquals(testEvent.getName(), doc.getString("name"));
         assertEquals(testEvent.getVenue(), doc.getString("venue"));
@@ -49,7 +49,7 @@ public class EventDocumentConverterTest {
         links.put("Sample Link", "http://example.com");
         doc.put("links", links);
 
-        Event convertedEvent = EventDocumentConverter.fromDocument(doc);
+        Event convertedEvent = EventConverter.toEvent(doc);
 
         assertEquals("Sample Event", convertedEvent.getName());
         assertEquals("Sample Venue", convertedEvent.getVenue());

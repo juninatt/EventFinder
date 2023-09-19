@@ -12,7 +12,7 @@ import se.pbt.exception.DatabaseConnectionException;
 import se.pbt.exception.EventDeletionException;
 import se.pbt.exception.EventNotFoundException;
 import se.pbt.exception.EventSavingException;
-import se.pbt.converter.EventDocumentConverter;
+import se.pbt.converter.EventConverter;
 import se.pbt.repository.EventRepository;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class MongoEventRepository implements EventRepository {
      */
     @Override
     public Event save(Event event) {
-        Document document = EventDocumentConverter.toDocument(event);
+        Document document = EventConverter.toDocument(event);
         try {
             collection.insertOne(document);
              return new Event(event, document.getObjectId("_id").toString());
@@ -70,7 +70,7 @@ public class MongoEventRepository implements EventRepository {
     public List<Event> findAll() {
         List<Event> events = new ArrayList<>();
         for (Document document : collection.find()) {
-            events.add(EventDocumentConverter.fromDocument(document));
+            events.add(EventConverter.toEvent(document));
         }
         if (events.size() == 0)
             throw new EventNotFoundException("Any");
@@ -89,7 +89,7 @@ public class MongoEventRepository implements EventRepository {
         if (document == null) {
             throw new EventNotFoundException(id);
         }
-        return Optional.of(EventDocumentConverter.fromDocument(document));
+        return Optional.of(EventConverter.toEvent(document));
     }
 
     /**
