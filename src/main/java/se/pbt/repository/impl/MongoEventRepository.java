@@ -7,12 +7,9 @@ import jakarta.inject.Singleton;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import se.pbt.config.MongoConfig;
-import se.pbt.domain.Event;
-import se.pbt.exception.DatabaseConnectionException;
-import se.pbt.exception.EventDeletionException;
-import se.pbt.exception.EventNotFoundException;
-import se.pbt.exception.EventSavingException;
 import se.pbt.converter.EventConverter;
+import se.pbt.domain.Event;
+import se.pbt.exception.*;
 import se.pbt.repository.EventRepository;
 
 import java.util.ArrayList;
@@ -69,11 +66,13 @@ public class MongoEventRepository implements EventRepository {
     @Override
     public List<Event> findAll() {
         List<Event> events = new ArrayList<>();
-        for (Document document : collection.find()) {
-            events.add(EventConverter.toEvent(document));
+        try {
+            for (Document document : collection.find()) {
+                events.add(EventConverter.toEvent(document));
+            }
+        } catch (RuntimeException exception) {
+            throw new EventConversionException("Failed to convert documents to objects while fetching from the database");
         }
-        if (events.size() == 0)
-            throw new EventNotFoundException("Any");
         return events;
     }
 

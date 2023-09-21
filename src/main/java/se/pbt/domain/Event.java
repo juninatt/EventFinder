@@ -1,6 +1,7 @@
 package se.pbt.domain;
 
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
 import org.bson.codecs.pojo.annotations.BsonId;
 
 import java.time.Instant;
@@ -22,6 +23,7 @@ import java.util.concurrent.ConcurrentMap;
  * </p>
  */
 @Introspected
+@Serdeable.Serializable
 public final class Event {
 
     @BsonId

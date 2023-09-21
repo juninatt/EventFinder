@@ -38,6 +38,10 @@ To run `EventFinder`, follow these steps:
 2. Use the command `mvn clean install` to build the project.
 3. Run the application with `java -jar target/eventfinder-1.0.jar`.
 
+## Performance Testing
+
+To perform load and stress tests on `EventFinder`, you can use JMeter. For a guide on how to download and use JMeter, refer to the [JMeter User Guide](jmeter-guide.md).
+
 ## Documentation
 
 `EventFinder` is thoroughly documented using JavaDoc. Key classes include:
