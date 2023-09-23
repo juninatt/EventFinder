@@ -1,8 +1,10 @@
 # EventFinder
 
-## Description
+### Description
 
-`EventFinder` is a Micronaut-based microservice designed to manage and retrieve different kinds of cultural events. It leverages MongoDB as its primary data store and is organized and built using Maven.
+`EventFinder` is a Micronaut-based microservice optimized for managing a single object type stored in MongoDB. 
+It features a collection of controller endpoints to streamline client-server communication and database access. 
+The project is organized and built using Maven, and incorporates JMeter for targeted stress testing.
 
 
 ### Prerequisites
@@ -16,21 +18,8 @@ Before you begin, ensure you have met the following requirements:
 
 Clone the `EventFinder` repository to your local machine to get started with the project.
 
-## Configuration
 
-The application utilizes Micronaut's `application.yml` for configuration. Ensure to set up the MongoDB URI and database name correctly before running the application.
-
-```yaml
-micronaut:
-  application:
-    name: eventFinder
-
-mongodb:
-  uri: mongodb://localhost:27017/eventsdb
-    ...
-```
-
-## Usage
+### Usage
 
 To run `EventFinder`, follow these steps:
 
@@ -38,19 +27,22 @@ To run `EventFinder`, follow these steps:
 2. Use the command `mvn clean install` to build the project.
 3. Run the application with `java -jar target/eventfinder-1.0.jar`.
 
-## Performance Testing
+### JMeter Performance Testing
 
-To perform load and stress tests on `EventFinder`, you can use JMeter. For a guide on how to download and use JMeter, refer to the [JMeter User Guide](jmeter-guide.md).
+[JMeter](https://jmeter.apache.org/) is an open-source tool designed for load testing and measuring the performance of various services, 
+with a focus on web applications. It can simulate multiple users with concurrent threads, generate a heavy load against web servers,
+and analyze the overall service performance under different types of load.
 
-## Documentation
+**Creating Custom Tests:**  
+For guidance on creating your own JMeter tests, consult the [JMeter User Guide](jmeter-guide.md).
 
-`EventFinder` is thoroughly documented using JavaDoc. Key classes include:
-- `MongoConfig`: Handles MongoDB configuration properties.
-- `MongoEventRepository`: Implements CRUD operations for events.
+**Running Tests:**  
+To execute the tests, simply run `mvn verify`.
 
-For detailed documentation, refer to the JavaDoc comments in the respective source files.
+**Viewing Test Results:**  
+Results are generated in the `target` directory and can be viewed in real-time in the console output if running tests from the command line.
 
-## Author
+#### Author
 
 Petter Bergström / [juninatt](https://github.com/juninatt) on GitHub
 
