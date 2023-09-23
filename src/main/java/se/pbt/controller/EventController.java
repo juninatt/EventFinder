@@ -1,6 +1,7 @@
 package se.pbt.controller;
 
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
 import jakarta.inject.Inject;
 import se.pbt.converter.EventConverter;
@@ -18,18 +19,18 @@ import java.util.Optional;
 @Controller("/events")
 public class EventController {
     private final EventService eventService;
-
     @Inject
     public EventController(EventService eventService) {
         this.eventService = eventService;
     }
+
 
     /**
      * Retrieves a list of all events.
      *
      * @return A list of {@link Event} objects.
      */
-    @Get
+    @Get(produces = MediaType.APPLICATION_JSON)
     public List<Event> listEvents() {
         return eventService.findAll();
     }
@@ -40,8 +41,8 @@ public class EventController {
      * @param event The event to be added.
      * @return The added {@link Event} object.
      */
-    @Post
-    public Event addEvent(EventDTO event) {
+    @Post(produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
+    public Event addEvent(@Body EventDTO event) {
         return eventService.save(EventConverter.toEvent(event));
     }
 
@@ -51,7 +52,7 @@ public class EventController {
      * @param id The ID of the event to be retrieved.
      * @return An HTTP response containing the event or an HTTP not found response.
      */
-    @Get("/{id}")
+    @Get(uri = "/{id}", produces = MediaType.APPLICATION_JSON)
     public HttpResponse<Event> getById(String id) {
         Optional<Event> optionalEvent = eventService.findById(id);
         if (optionalEvent.isPresent()) {
@@ -67,7 +68,7 @@ public class EventController {
      * @param id The ID of the event to be deleted.
      * @return An HTTP response indicating the successful deletion.
      */
-    @Delete("/{id}")
+    @Delete(uri = "/{id}", produces = MediaType.TEXT_PLAIN)
     public HttpResponse<String> deleteById(String id) {
         eventService.deleteById(id);
         return HttpResponse.ok("Event deleted successfully");

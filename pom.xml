@@ -154,14 +154,31 @@
         <artifactId>jmeter-maven-plugin</artifactId>
         <version>3.7.0</version>
         <executions>
+          <!-- Configures JMeter -->
+          <execution>
+            <id>configuration</id>
+            <goals>
+              <goal>configure</goal>
+            </goals>
+          </execution>
+          <!-- Run JMeter tests -->
           <execution>
             <id>jmeter-tests</id>
-            <phase>verify</phase>
             <goals>
               <goal>jmeter</goal>
             </goals>
           </execution>
+          <!-- Fail build on errors in test -->
+          <execution>
+            <id>jmeter-check-results</id>
+            <goals>
+              <goal>results</goal>
+            </goals>
+          </execution>
         </executions>
+        <configuration>
+          <generateReports>true</generateReports>
+        </configuration>
       </plugin>
     </plugins>
   </build>
