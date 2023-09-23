@@ -27,6 +27,28 @@ To run `EventFinder`, follow these steps:
 2. Use the command `mvn clean install` to build the project.
 3. Run the application with `java -jar target/eventfinder-1.0.jar`.
 
+
+
+### Docker
+
+To facilitate the use of Docker in the EventFinder project, a Dockerfile and a docker-compose.yml file are included in the repository. 
+These files are configured to build a Docker image of the application and run it along with a MongoDB container.
+Starting the Application and MongoDB with Docker Compose
+
+To build the Docker image and spin up both the EventFinder application and MongoDB containers, navigate to the root directory of the EventFinder project and run the following command:
+
+```bash
+docker-compose up --build
+```
+
+This command will do the following:
+
+1.   Build the EventFinder Docker image based on the Dockerfile in the current directory.
+2.   Start a container for MongoDB.
+3.   Start the EventFinder application container, which will use MongoDB for its data storage.
+
+For Docker-specific usage see their [Official Website](https://www.docker.com/)
+
 ### JMeter Performance Testing
 
 [JMeter](https://jmeter.apache.org/) is an open-source tool designed for load testing and measuring the performance of various services, 

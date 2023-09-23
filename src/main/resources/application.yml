@@ -3,6 +3,6 @@ micronaut:
     name: eventFinder
 
 mongodb:
-  uri: mongodb://localhost:27017/eventsdb
+  uri: mongodb://localhost:27017/
   database: eventsdb
   collection: events

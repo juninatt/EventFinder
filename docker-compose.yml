@@ -1,0 +1,18 @@
+# Specifies the version of Docker Compose.
+version: '3'
+
+services:
+  event-finder-app:
+    # Specifies the location for building the Docker image. The period indicates the current directory.
+    build: .
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/
+      - MONGODB_DATABASE=eventsdb
+      - MONGODB_COLLECTION=events
+    depends_on:
+      - mongo
+  mongo:
+    container_name: event_mongodb
+    image: mongo:latest
+    ports:
+      - "27017:27017"
