@@ -1,15 +1,19 @@
 package se.pbt.domain;
 
+import io.micronaut.core.annotation.Creator;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
+import io.micronaut.validation.Validated;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.bson.codecs.pojo.annotations.BsonId;
 
 import java.time.Instant;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * Represents an event with associated details.
@@ -22,37 +26,32 @@ import java.util.concurrent.ConcurrentMap;
  * The {@code @Introspected} annotation marks this class for compile-time bean introspection.
  * </p>
  */
+@Validated
 @Introspected
 @Serdeable.Serializable
-public final class Event {
-
+public class Event {
     @BsonId
     private String id;
+    @NotBlank
     private final String name;
-
+    @NotBlank
     private final String venue;
-
+    @NotNull
     private final Instant date;
-
+    @NotBlank
     private final String category;
-
+    @Min(1)
     private final long duration;
     private final String description;
-
+    @Min(0)
     private final double ticketPrice;
-
-    /**
-     * Map of event links, implemented as a ConcurrentMap to safeguard against
-     * any concurrent modifications that might be introduced in future versions
-     * of this class.
-     */
-    private final ConcurrentMap<String, String> links;
-
+    private final Map<String, String> links;
 
 
     /**
-     * Main constructor of the class. Injects data to all fields except 'id'.
+     * Main constructor of the class. Injects data to all fields except 'id' which is generated when persisted to database.
      */
+    @Creator
     public Event(
                  String name,
                  String venue,
@@ -61,7 +60,7 @@ public final class Event {
                  long duration,
                  String description,
                  double ticketPrice,
-                 ConcurrentMap<String, String> links
+                 Map<String, String> links
     )
     {
         this.name = name;
@@ -71,18 +70,18 @@ public final class Event {
         this.duration = duration;
         this.description = description;
         this.ticketPrice = ticketPrice;
-        this.links = new ConcurrentHashMap<>(links);
+        this.links = new HashMap<>(links);
     }
 
     // Constructors for copying
 
     /**
-     * Cloning constructor. Creates new event with updated links.
+     * Cloning constructor. Creates new event with updated links to maintain immutability.
      *
      * @param original The original event object.
      * @param links The new links for the event
      */
-    public Event(Event original, ConcurrentMap<String, String> links)
+    public Event(Event original, Map<String, String> links)
     {
         this.name = original.getName();
         this.venue = original.getVenue();
@@ -91,11 +90,11 @@ public final class Event {
         this.duration = original.getDuration();
         this.description = original.getDescription();
         this.ticketPrice = original.getTicketPrice();
-        this.links = new ConcurrentHashMap<>(links);
+        this.links = new HashMap<>(links);
     }
 
     /**
-     * Cloning constructor. Creates new event with ID from input.
+     * Cloning constructor. Returns new event with given ID to maintain immutability.
      *
      * @param original The original event object.
      * @param id The ID to be associated with the event.
@@ -109,7 +108,7 @@ public final class Event {
         this.duration = original.duration;
         this.description = original.description;
         this.ticketPrice = original.ticketPrice;
-        this.links = new ConcurrentHashMap<>(original.links);
+        this.links = new HashMap<>(original.links);
     }
 
     // Getters
