@@ -1,5 +1,5 @@
   mongodb:
     uri: mongodb://localhost:27017/
-    database: integrationTestDatabase
-    collection: eventCollection
+    database: socialAlertsTestDatabase
+    collection: socialAlertsTestCollection
 

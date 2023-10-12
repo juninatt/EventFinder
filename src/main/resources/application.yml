@@ -1,8 +1,10 @@
 micronaut:
   application:
-    name: eventFinder
+    name: socialAlert
+  jackson:
+    enabled: true
 
 mongodb:
   uri: mongodb://localhost:27017/
-  database: eventsdb
-  collection: events
+  database: socialAlertDatabase
+  collection: socialAlertCollection
