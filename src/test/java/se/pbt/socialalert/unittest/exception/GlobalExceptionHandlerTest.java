@@ -1,19 +1,20 @@
-package se.pbt.unittest.exception;
+package se.pbt.socialalert.unittest.exception;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import se.pbt.exception.*;
-import se.pbt.exception.handler.GlobalExceptionHandler;
-import se.pbt.exception.response.ErrorResponse;
+import se.pbt.socialalert.exception.*;
+import se.pbt.socialalert.exception.handler.GlobalExceptionHandler;
+import se.pbt.socialalert.exception.response.ErrorResponse;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@MicronautTest
+@DisplayName("GlobalExceptionHandler Test: ")
 public class GlobalExceptionHandlerTest {
 
     private GlobalExceptionHandler handler;
@@ -26,17 +27,22 @@ public class GlobalExceptionHandlerTest {
     }
 
     @Test
-    @DisplayName("Verify EventNotFound is handled")
+    @DisplayName("Verify AlertNotFound is handled")
     void handleEventNotFoundException() {
-        var exception = new EventNotFoundException("13");
+        var exception = new AlertNotFoundException("13");
 
         HttpResponse<ErrorResponse> response = handler.handle(mockRequest, exception);
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatus());
-        assertEquals("EventNotFoundException", response.getBody().get().getTitle());
-        assertEquals("No event found with ID: 13", response.getBody().get().getDetail());
-        assertEquals(404, response.getBody().get().getHttpStatusCode());
+        assertThat(response.getStatus(), is(HttpStatus.NOT_FOUND));
+
+        assertThat("Title should be 'AlertNotFoundException'",
+                response.getBody().get().getTitle(), is("AlertNotFoundException"));
+        assertThat("Detail should be '13'",
+                response.getBody().get().getDetail(), is("13"));
+        assertThat("HTTP status code should be 404",
+                response.getBody().get().getHttpStatusCode(), is(404));
     }
+
 
     @Test
     @DisplayName("Verify DataBaseConnectionException is handled")
@@ -52,41 +58,41 @@ public class GlobalExceptionHandlerTest {
     }
 
     @Test
-    @DisplayName("Verify EventSavingException is handled")
+    @DisplayName("Verify AlertSavingException is handled")
     void handleEventSavingException() {
-        var exception = new EventSavingException("Failed to save event");
+        var exception = new AlertSavingException("Failed to save alert");
 
         HttpResponse<ErrorResponse> response = handler.handle(mockRequest, exception);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatus());
-        assertEquals("EventSavingException", response.getBody().get().getTitle());
-        assertEquals("Failed to save event", response.getBody().get().getDetail());
+        assertEquals("AlertSavingException", response.getBody().get().getTitle());
+        assertEquals("Failed to save alert", response.getBody().get().getDetail());
         assertEquals(500, response.getBody().get().getHttpStatusCode());
     }
 
     @Test
-    @DisplayName("Verify EventDeletionException is handled")
+    @DisplayName("Verify AlertDeletionException is handled")
     void handleEvenDeletionException() {
-        var exception = new EventDeletionException("13");
+        var exception = new AlertDeletionException("13");
 
         HttpResponse<ErrorResponse> response = handler.handle(mockRequest, exception);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatus());
-        assertEquals("EventDeletionException", response.getBody().get().getTitle());
-        assertEquals("Error deleting event with ID: 13", response.getBody().get().getDetail());
+        assertEquals("AlertDeletionException", response.getBody().get().getTitle());
+        assertEquals("13", response.getBody().get().getDetail());
         assertEquals(500, response.getBody().get().getHttpStatusCode());
     }
 
     @Test
-    @DisplayName("Verify EventValidationException is handled")
+    @DisplayName("Verify AlertValidationException is handled")
     void handleEventValidationException() {
-        var exception = new EventValidationException("Could not validate event");
+        var exception = new AlertValidationException("Could not validate alert");
 
         HttpResponse<ErrorResponse> response = handler.handle(mockRequest, exception);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatus());
-        assertEquals("EventValidationException", response.getBody().get().getTitle());
-        assertEquals("Could not validate event", response.getBody().get().getDetail());
+        assertEquals("AlertValidationException", response.getBody().get().getTitle());
+        assertEquals("Could not validate alert", response.getBody().get().getDetail());
         assertEquals(400, response.getBody().get().getHttpStatusCode());
     }
 
@@ -119,13 +125,13 @@ public class GlobalExceptionHandlerTest {
     @Test
     @DisplayName("Verify exception without custom annotation is handled")
     void handleGenericException() {
-        var exception = new Exception("Some generic error");
+        var exception = new Exception("Undefined error");
 
         HttpResponse<ErrorResponse> response = handler.handle(mockRequest, exception);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatus());
         assertEquals("Exception", response.getBody().get().getTitle());
-        assertEquals("Some generic error", response.getBody().get().getDetail());
+        assertEquals("Undefined error", response.getBody().get().getDetail());
         assertEquals(500, response.getBody().get().getHttpStatusCode());
     }
 }
