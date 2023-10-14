@@ -1,5 +1,7 @@
 package se.pbt.socialalert.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Creator;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
@@ -27,6 +29,7 @@ import java.util.Objects;
  */
 @Introspected
 @Serdeable.Serializable
+@Serdeable.Deserializable
 public class Alert {
     @BsonId
     private final String id;
@@ -95,17 +98,19 @@ public class Alert {
     }
 
 
+
     /**
-     * Secondary constructor used for conversion from MongoDB {@link Document} when timestamp already exists.
+     * Secondary constructor used for conversion from MongoDB {@link Document} when timestamp already exists and JSon deserialization.
      */
-    public Alert(String id,
-                 String trigger,
-                 Object triggerContext,
-                 String userAccount,
-                 String ipAddress,
-                 String sourceReference,
-                 String geographicLocation,
-                 Instant timestamp) {
+    @JsonCreator
+    public Alert(@JsonProperty("id") String id,
+                 @JsonProperty("trigger") String trigger,
+                 @JsonProperty("triggerContext") Object triggerContext,
+                 @JsonProperty("userAccount") String userAccount,
+                 @JsonProperty("ipAddress") String ipAddress,
+                 @JsonProperty("sourceReference") String sourceReference,
+                 @JsonProperty("geographicLocation") String geographicLocation,
+                 @JsonProperty("timestamp") Instant timestamp) {
         this.id = id;
         this.trigger = trigger;
         this.triggerContext = triggerContext;

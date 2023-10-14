@@ -18,7 +18,7 @@ public class AlertConverterTest {
     @Test
     @DisplayName("Verify conversion from alert to document")
     public void convertAlertEntity_toDocument() {
-        Alert testAlert = TestObjectCreator.socialAlert("Justin Bieber Concert");
+        Alert testAlert = TestObjectCreator.alert("Justin Bieber Concert");
 
         Document doc = AlertConverter.toDocument(testAlert);
 

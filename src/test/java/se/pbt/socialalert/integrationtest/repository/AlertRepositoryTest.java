@@ -44,7 +44,7 @@ public class AlertRepositoryTest {
         @Order(2)
         @DisplayName("Saves an alert to the database and correctly stores all fields")
         public void savesAlertToDatabase_allFieldsCorrectValues() {
-            Alert testAlert = TestObjectCreator.socialAlert(trigger);
+            Alert testAlert = TestObjectCreator.alert(trigger);
             Alert savedAlert = alertRepository.save(testAlert).block();
 
             int inDatabase = objectsInDatabase();
@@ -80,8 +80,8 @@ public class AlertRepositoryTest {
 
         static Stream<Alert> alertProvider() {
             return Stream.of(
-                    TestObjectCreator.socialAlert("frihet"),
-                    TestObjectCreator.socialAlert("självständighet")
+                    TestObjectCreator.alert("frihet"),
+                    TestObjectCreator.alert("självständighet")
             );
         }
 

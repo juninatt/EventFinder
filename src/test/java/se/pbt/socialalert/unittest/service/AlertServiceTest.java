@@ -37,7 +37,7 @@ public class AlertServiceTest {
     @BeforeAll
     static void init() {
         testTrigger = "Heroin";
-        testAlert = TestObjectCreator.socialAlert(testTrigger);
+        testAlert = TestObjectCreator.alert(testTrigger);
     }
     @AfterEach
     void cleanUp() {
@@ -60,7 +60,7 @@ public class AlertServiceTest {
     @DisplayName("Retrieving all alerts returns a list containing stored alerts")
     public void testGetAllAlerts_retursAllAlert() {
         String trigger = "Free Tibet";
-        Alert alert = TestObjectCreator.socialAlert(trigger);
+        Alert alert = TestObjectCreator.alert(trigger);
 
         when(alertRepository.findAll()).thenReturn(Flux.just(testAlert, alert));
 
@@ -98,7 +98,7 @@ public class AlertServiceTest {
     @DisplayName("Creating an alert returns the created alert with generated ID")
     void testCreateEvent_returnsCreatedAlert_withCorrectValues() {
         AlertCreationDTO newAlertData = TestObjectCreator.alertCreationDTO(testTrigger);
-        Alert expectedAlert = TestObjectCreator.socialAlert(testTrigger);
+        Alert expectedAlert = TestObjectCreator.alert(testTrigger);
 
         when(alertRepository.save(any())).thenReturn(Mono.just(expectedAlert));
 

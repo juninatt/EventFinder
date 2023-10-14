@@ -40,7 +40,7 @@ public class TestObjectCreator {
      *
      * @return A populated {@link Alert} object with test values.
      */
-    public static Alert socialAlert(String trigger) {
+    public static Alert alert(String trigger) {
         String id = new ObjectId().toString();
         String triggerContext = "This burger is da bomb!";
         String userAccount = "https://www.linkedin.com/in/sven/";

@@ -1,7 +1,9 @@
 package se.pbt.socialalert.unittest.controller;
 
+import io.micronaut.http.MutableHttpResponse;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,13 +18,18 @@ import se.pbt.socialalert.model.entity.Alert;
 import se.pbt.socialalert.service.AlertService;
 import se.pbt.socialalert.testobject.TestObjectCreator;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.when;
 
-@DisplayName("EventController Unit Tests")
+@DisplayName("AlertController Unit Tests")
 @ExtendWith(MockitoExtension.class)
 class AlertControllerTest {
+
+    // Fields
     @Mock
     private AlertService alertService;
     @InjectMocks
@@ -30,81 +37,136 @@ class AlertControllerTest {
 
     private static String testEventName, testDTOName;
 
+    // Setup before- and after action
+
     @BeforeAll
     static void init() {
         testEventName = "Controller Integration Test Event";
         testDTOName = "Controller Integration Test DTO";
     }
 
-    @Test
-    @DisplayName("Retrieving all events returns status 200 OK with list containing stored event")
-    void testListEvents() {
-        Alert alert = TestObjectCreator.socialAlert(testEventName);
+    // Tests
 
-        when(alertService.getAllAlerts()).thenReturn(Flux.just(alert));
+    @Nested
+    @DisplayName("Tests for retrieving alerts:")
+    class RetrieveAllAlertTest {
 
-        var response = alertController.getAlerts();
+        @Test
+        @DisplayName("Retrieves list of all alerts with correct field values and a response status 200 OK")
+        void returnsAlertsWhenAlertExist_withStatus200Ok() {
+            Alert alert = TestObjectCreator.alert(testEventName);
 
-        StepVerifier.create(response)
-                .expectNextMatches(httpResponse -> {
-                    assertEquals(200, httpResponse.getStatus().getCode());
-                    assertEquals(alert, httpResponse.body());
-                    return  true;
-                })
-                .expectComplete()
-                .verify();
+            when(alertService.getAllAlerts()).thenReturn(Flux.just(alert));
+
+            var response = alertController.getAlerts();
+
+            StepVerifier.create(response)
+                    .expectNextMatches(httpResponse -> {
+                        assertHttpStatusIs(200, httpResponse);
+                        httpResponse.body().forEach(index -> assertEquals(alert, index));
+                        return true;
+                    })
+                    .verifyComplete();
+        }
+
+        @Test
+        @DisplayName("Retrieving all alerts returns empty list with response status 200 OK when no alerts exist")
+        void returnsEmptyListAnd200Ok_whenNoAlertsExist() {
+            when(alertService.getAllAlerts()).thenReturn(Flux.empty());
+
+            var response = alertController.getAlerts();
+
+            StepVerifier.create(response)
+                    .expectNextMatches(httpResponse -> {
+                        assertHttpStatusIs(200, httpResponse);
+                        List<Alert> alerts = httpResponse.getBody().get();
+                        assertThat(alerts).isEmpty();
+                        return true;
+                    })
+                    .verifyComplete();
+        }
+
+        @Test
+        @DisplayName("Retrieves alert with correct field values and a response status 200 OK")
+        void returnsAlertWhenAlertExists_withStatus200Ok() {
+            Alert alert = TestObjectCreator.alert(testEventName);
+
+            when(alertService.getAlertById(anyString())).thenReturn(Mono.just(alert));
+
+            var response = alertController.getAlert(alert.getId());
+
+            StepVerifier.create(response)
+                    .expectNextMatches(httpResponse -> assertHttpStatusIs(200, httpResponse)
+                            && assertFieldsMatch(alert, httpResponse))
+                    .verifyComplete();
+        }
     }
 
-    @Test
-    @DisplayName("Creating event returns status 201 CREATED with created event")
-    void testAddEvent() {
-        AlertCreationDTO alertCreationDTO = TestObjectCreator.alertCreationDTO(testDTOName);
-        Alert alert = TestObjectCreator.socialAlert(testEventName);
-        when(alertService.createAlert(alertCreationDTO)).thenReturn(Mono.just(alert));
+    @Nested
+    @DisplayName("Tests for actions modifying database alerts:")
+    class ModifyDatabaseTest {
 
-        var response = alertController.addAlert(alertCreationDTO);
+        @Test
+        @DisplayName("Creates alert and returns created alert with response status 201 CREATED")
+        void addsAlertToDataBase_andReturnsStatus201Created() {
+            AlertCreationDTO alertCreationDTO = TestObjectCreator.alertCreationDTO(testDTOName);
+            Alert alert = TestObjectCreator.alert(testEventName);
 
-        StepVerifier.create(response)
-                .expectNextMatches(httpResponse -> {
-                    assertEquals(201, httpResponse.status().getCode());
-                    assertEquals(alert, httpResponse.body());
-                    return true;
-                })
-                .expectComplete()
-                .verify();
+            when(alertService.createAlert(alertCreationDTO)).thenReturn(Mono.just(alert));
+
+            var response = alertController.addAlert(alertCreationDTO);
+
+            StepVerifier.create(response)
+                    .expectNextMatches(httpResponse -> assertHttpStatusIs(201, httpResponse)
+                            && assertFieldsMatch(alert, httpResponse))
+                    .verifyComplete();
+        }
+
+        @Test
+        @DisplayName("Deletes alert and returns response status 200 OK")
+        void deletesAlertWhenAlertExists_andReturnsStatus200Ok() {
+            when(alertService.deleteAlertById(anyString())).thenReturn(Mono.empty());
+
+            var response = alertController.deleteAlert(anyString());
+
+            StepVerifier.create(response)
+                    .expectNextMatches(httpResponse -> assertHttpStatusIs(200, httpResponse))
+                    .verifyComplete();
+        }
     }
 
-    @Test
-    @DisplayName("Retrieve event bt ID returns status 200 OK with retrieved event")
-    void testGetById() {
-        Alert alert = TestObjectCreator.socialAlert(testEventName);
-        when(alertService.getAlertById(anyString())).thenReturn(Mono.just(alert));
+    // Private helper methods
 
-        var response = alertController.getAlert(alert.getId());
-
-        StepVerifier.create(response)
-                .expectNextMatches(httpResponse -> {
-                    assertEquals(200, httpResponse.status().getCode());
-                    assertEquals(alert, httpResponse.body());
-                    return true;
-                })
-                .expectComplete()
-                .verify();
+    /**
+     * Asserts whether the fields of the provided {@link Alert} object match the fields
+     * of the {@link Alert} object in the HTTP response body.
+     *
+     * @param alert       The expected alert object.
+     * @param httpResponse The HTTP response containing an alert object.
+     * @return {@code true} if fields match, {@code false} otherwise.
+     */
+    private static boolean assertFieldsMatch(Alert alert, MutableHttpResponse<Alert> httpResponse) {
+        try {
+            assertEquals(alert, httpResponse.body());
+            return true;
+        } catch (AssertionError error) {
+            return false;
+        }
     }
 
-    @Test
-    @DisplayName("Deleting event returns status 200 OK")
-    void testDeleteById() {
-        when(alertService.deleteAlertById(anyString())).thenReturn(Mono.empty());
-
-        var response = alertController.deleteAlert(anyString());
-
-        StepVerifier.create(response)
-                .expectNextMatches(res -> {
-                    assertEquals(200, res.status().getCode());
-                return true;
-                })
-                .expectComplete()
-                .verify();
+    /**
+     * Asserts whether the HTTP response status code matches the expected code.
+     *
+     * @param expected    The expected HTTP status code.
+     * @param httpResponse The HTTP response to be verified.
+     * @return {@code true} if status code matches, {@code false} otherwise.
+     */
+    private static boolean assertHttpStatusIs(int expected, MutableHttpResponse<?> httpResponse) {
+        try {
+            assertEquals(expected, httpResponse.getStatus().getCode());
+            return true;
+        } catch (AssertionError error) {
+            return false;
+        }
     }
 }

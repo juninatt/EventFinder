@@ -12,6 +12,9 @@ import se.pbt.socialalert.model.dto.AlertCreationDTO;
 import se.pbt.socialalert.exception.AlertNotFoundException;
 import se.pbt.socialalert.service.AlertService;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Controller class handling asynchronous HTTP requests related to {@link Alert} entities.
  * This class defines endpoints for retrieving, adding, getting, and deleting alerts asynchronously.
@@ -37,10 +40,12 @@ public class AlertController {
      * @return A Flux emitting HTTP responses containing the list of alerts in JSON format.
      */
     @Get(produces = MediaType.APPLICATION_JSON)
-    public Flux<MutableHttpResponse<Alert>> getAlerts() {
+    public Flux<MutableHttpResponse<List<Alert>>> getAlerts() {
         return alertService.getAllAlerts()
+                .collectList()
                 .map(HttpResponse::ok)
-                .defaultIfEmpty(HttpResponse.notFound());
+                .flux()
+                .defaultIfEmpty(HttpResponse.ok(Collections.emptyList()));
     }
 
     /**
@@ -76,7 +81,7 @@ public class AlertController {
      * @return A Mono emitting an HTTP response indicating the status of the deletion operation.
      */
     @Delete(uri = "/{id}", produces = MediaType.TEXT_PLAIN)
-    public Mono<MutableHttpResponse<String>> deleteAlert(String id) {
+        public Mono<MutableHttpResponse<String>> deleteAlert(String id) {
         return alertService.deleteAlertById(id)
                 .thenReturn(HttpResponse.ok("Alert deleted successfully"))
                 .onErrorResume(AlertNotFoundException.class, ex -> Mono.just(HttpResponse.notFound()));
